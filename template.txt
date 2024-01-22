@@ -67,7 +67,6 @@ String separatori = " \t\r.,;:'\"()-`*&^#@!$\\|[]{}?/";
 - No StringTokenizer
 - Controllare che il valore di ritorno in RPC e RMI non sia NULL
 - Non usare String per un solo carattere; 
-- Cercare di non usare metodi della classe String in Java (libera interpretazione)
 - Se chiede una lista di nomi riotornare un array di Stringhe
 - Non usare lo Scanner ma BufferedReader: 
 	BufferedReader br = null;
