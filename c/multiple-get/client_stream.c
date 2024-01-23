@@ -21,9 +21,11 @@ Client per richiedere l'invio di tutti i filedi un direttorio (multiple-get)
 #define MAX_DIR 256
 
 int main(int argc, char *argv[]) {
-    int                sd, nread, nwrite, port, fineDirettorio;
-    char               c, ok, file_name[LENGTH_FILE_NAME], targa[LENGHT_TARGA], dir[MAX_DIR], fullpath_file[MAX_DIR];
+    int                sd, nread, nwrite, port, fineDirettorio, okTerminator;
+    char               c, ok, file_name[LENGTH_FILE_NAME], targa[LENGHT_TARGA], dir[MAX_DIR], path_file[MAX_DIR];
+    char terminator = '\0';
     long file_size, file_name_size;
+    struct stat statBuff;
     struct hostent    *host;
     struct sockaddr_in servaddr;
 
@@ -80,6 +82,21 @@ int main(int argc, char *argv[]) {
 
     while (gets(targa)) {
 
+        //controllo se la stringa contiene il terminatore, per sapere se la stringa scritta dall'utente eccede il numero di caratteri massimo che può contenere
+        okTerminator = 0;
+        for(int i=0; i<LENGHT_TARGA; i++){
+            if(targa[i] == terminator){
+                okTerminator = 1;
+                break;
+            }
+        }
+
+        if(!okTerminator){
+            perror("La stringa inserita eccede il massimo dei caratteri consentiti");
+            continue;
+        }
+
+        
         if (write(sd, targa, LENGHT_TARGA) < 0) {
             perror("write");
             break;
@@ -114,10 +131,23 @@ int main(int argc, char *argv[]) {
                 //leggo il nome del file
                 read(sd, file_name, file_name_size);
                 printf("[Debug File Name] Ricevuto nome del file: %s\n", file_name);
-                //creo il path completo del file
-                sprintf(fullpath_file, "%s/%s",dir, file_name);
-                //apro il file con il path completo
-                int fd = open(fullpath_file, O_CREAT | O_RDWR, 0666);
+                //creo il path del file
+                sprintf(path_file, "%s/%s",dir, file_name);
+
+                //controllo che il file non sia già presente sul file system, scrivo S per saltare il downlowd del file, C per confermarlo
+                if(stat(path_file, &statBuff) == 0){
+                    //esiste, quindi non lo devo scaricare
+                    printf("File già presente sul file system, notifico il server\n");
+                    c = 'S';
+                    write(sd, &c, 1);
+                    continue;
+                }
+
+                c = 'C';
+                write(sd, &c, 1);
+
+                //apro il file
+                int fd = open(path_file, O_CREAT | O_RDWR, 0666);
 
                 //leggo la dimensione del file
                 read(sd, &file_size, sizeof(file_size));

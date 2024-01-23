@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
     int                 listenfd, connfd, udpfd, fd_file, nready, maxfdp1, res;
     const int           on   = 1;
     long                file_size, file_name_size;
-    char                buff[DIM_BUFF], nome_file[LENGTH_FILE_NAME], nome_dir[PATH_MAX], targa[LENGHT_TARGA], patente[LENGHT_PATENTE];
+    char                buff[DIM_BUFF], nome_file[LENGTH_FILE_NAME], nome_dir[PATH_MAX], targa[LENGHT_TARGA], patente[LENGHT_PATENTE], carBuff;
     fd_set              rset;
     int                 len, nread, nwrite, num, port;
     struct sockaddr_in  cliaddr, servaddr;
@@ -215,25 +215,27 @@ int main(int argc, char **argv) {
                             continue;
                         }       
 
-                        write(connfd, "S", 1);
+                        carBuff = 'S';
+                        //scrivo S se il direttorio esiste
+                        write(connfd, &carBuff, 1);
 
                         while ((entry = readdir(dir)) != NULL) {
                             if (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, "..")) continue;
 
                             char* file_name = entry->d_name;
 
-                            char fullpath_file[PATH_MAX];
-                            snprintf(fullpath_file, PATH_MAX, "%s/%s", nome_dir, file_name);
-                            printf("\n[Debug] fullpath: %s\n", fullpath_file);
+                            char path_file[PATH_MAX];
+                            snprintf(path_file, PATH_MAX, "%s/%s", nome_dir, file_name);
+                            printf("\n[Debug] fullpath: %s\n", path_file);
 
-                            if (lstat(fullpath_file, &statbuf) == -1) {
+                            if (lstat(path_file, &statbuf) == -1) {
                                 perror("lstat");
                                 exit(EXIT_FAILURE);
                             }
 
                             //controllo se il file è un file regolare
                             if (S_ISREG(statbuf.st_mode)) {
-                                int fd_file = open(fullpath_file, O_RDONLY);
+                                int fd_file = open(path_file, O_RDONLY);
                                 if (fd_file == -1) {
                                     perror("open");
                                     exit(EXIT_FAILURE);
@@ -248,6 +250,14 @@ int main(int argc, char **argv) {
 
                                 //mando il nome del file
                                 write(connfd, file_name, file_name_size);
+
+                                //leggo risposta del client per sapere se mandare il file o meno
+                                read(connfd, &carBuff, 1);
+
+                                if(carBuff == 'S'){
+                                    printf("File già esistente sul client, lo salto\n");
+                                    continue;
+                                } 
 
                                 //Mando la dimensione del file al client
                                 file_size = statbuf.st_size;
@@ -266,8 +276,8 @@ int main(int argc, char **argv) {
                                 }
                                 printf("Terminato invio  del file %s\n", file_name);
                             }
-                            printf("Terminata multile-get del direttorio %s\n\n", nome_dir); 
                         } //while
+                        printf("Terminata multile-get del direttorio %s\n\n", nome_dir); 
 
                         /* invio al client segnale di terminazione multiple-get: -1 */
                         long term = -1;
