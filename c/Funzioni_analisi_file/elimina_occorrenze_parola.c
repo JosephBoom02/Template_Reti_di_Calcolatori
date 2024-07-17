@@ -45,10 +45,6 @@ int main(){
                             res = -1;
                             break;
                         } else {
-                            // La presenza di un separatore indica la fine di una parola. Altri
-                            // separatori? Punteggiatura? Sarebbe meglio avere un array di
-                            // separatori, magari letto da un file di configurazione all'avvio del
-                            // server.
                             int fineParola = 0;
                             for(int i=0;i<strlen(separatori); i++){
                                 if(read_char == separatori[i]){

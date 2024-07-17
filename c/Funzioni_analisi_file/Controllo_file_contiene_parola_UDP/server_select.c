@@ -193,15 +193,15 @@ int main(int argc, char **argv) {
                         perror(err);
                         break;
                     } else {
-                        bool fineParola = false;
+                        int fineParola = -1;
 
                         for(int i=0;i<strlen(separatori); i++){
                             if(read_char == separatori[i]){
-                                fineParola = true;
+                                fineParola = 0;
                                 break;
                             }
                         }
-                        if (fineParola) {
+                        if (fineParola == 0) {
                             word_buffer[count_letters] = '\0';
                             if (strcmp(word_buffer, req.parola)==0) { 
                                 // parola uguale
