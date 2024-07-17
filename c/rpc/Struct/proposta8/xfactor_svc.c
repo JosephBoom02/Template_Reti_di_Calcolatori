@@ -3,7 +3,7 @@
  * It was generated using rpcgen.
  */
 
-#include "fattorex.h"
+#include "xfactor.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <rpc/pmap_clnt.h>
@@ -17,7 +17,7 @@
 #endif
 
 static void
-fattorex_1(struct svc_req *rqstp, register SVCXPRT *transp)
+operation_1(struct svc_req *rqstp, register SVCXPRT *transp)
 {
 	union {
 		Input esprimi_voto_1_arg;
@@ -68,15 +68,15 @@ main (int argc, char **argv)
 {
 	register SVCXPRT *transp;
 
-	pmap_unset (FATTOREX, FATTOREXVERS);
+	pmap_unset (OPERATION, OPERATIONVERS);
 
 	transp = svcudp_create(RPC_ANYSOCK);
 	if (transp == NULL) {
 		fprintf (stderr, "%s", "cannot create udp service.");
 		exit(1);
 	}
-	if (!svc_register(transp, FATTOREX, FATTOREXVERS, fattorex_1, IPPROTO_UDP)) {
-		fprintf (stderr, "%s", "unable to register (FATTOREX, FATTOREXVERS, udp).");
+	if (!svc_register(transp, OPERATION, OPERATIONVERS, operation_1, IPPROTO_UDP)) {
+		fprintf (stderr, "%s", "unable to register (OPERATION, OPERATIONVERS, udp).");
 		exit(1);
 	}
 
@@ -85,8 +85,8 @@ main (int argc, char **argv)
 		fprintf (stderr, "%s", "cannot create tcp service.");
 		exit(1);
 	}
-	if (!svc_register(transp, FATTOREX, FATTOREXVERS, fattorex_1, IPPROTO_TCP)) {
-		fprintf (stderr, "%s", "unable to register (FATTOREX, FATTOREXVERS, tcp).");
+	if (!svc_register(transp, OPERATION, OPERATIONVERS, operation_1, IPPROTO_TCP)) {
+		fprintf (stderr, "%s", "unable to register (OPERATION, OPERATIONVERS, tcp).");
 		exit(1);
 	}
 
