@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
     Output  *out;
     char    str[5];
     int     i, j, fila, col;
-    char    c, ok[256], canditato[256], tipo[256];
+    char    c, ok, canditato[256], tipo[256];
 
     if (argc != 2) {
         printf("usage: %s server_host\n", argv[0]);
@@ -34,8 +34,9 @@ int main(int argc, char *argv[]) {
     }
 
     printf("Inserire:\nC) per vedere la classifica dei giudici\tV) per esprimere un voto\t^D per terminare: ");
-    while (gets(ok)) {
-        if (strcmp(ok, "V") == 0) {
+    while ((ok = getchar()) != 0) {
+        getchar(); //consumo l'invio
+        if (ok == 'V') {
             printf("Nome del candidato: \n");
             gets(canditato);
 
@@ -70,7 +71,7 @@ int main(int argc, char *argv[]) {
             }
         
         // if P
-        else if (strcmp(ok, "C") == 0)
+        else if (ok == 'C')
         {
             // Invocazione remota
             out = classifica_giudici_1(in, cl);

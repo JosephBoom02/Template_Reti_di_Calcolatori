@@ -44,26 +44,15 @@ int main(int argc, char *argv[]) {
     printf("operazioni: AS=aggiungi stanza,EU=elimina utente, AU=aggiungi utente,\n");
     printf("VU=visualizza utente, ES=elimina stanza): ");
     while (gets(ok)) {
-        //magari controllare che ok sia una stringa di due caratteri
-        int                okTerminator;
-        char               terminator = '\0';
+        //controllo che ok sia una stringa di due caratteri 
+        if(ok[2] != '\0'){
+            printf("Inserire una stringa di esattamente due caratteri!\n");
+            continue;
+        }
+
         if (strcmp(ok, "AS") == 0) {
             printf("Inserisci il nome della stanza che vuoi aggiungere: \n");
             gets(stanza);
-
-            //controllo che la stringa inserita non ecceda la grandezza designata
-            okTerminator = 0;
-            for(int i=0; i<MAX_STRING; i++){
-                if(stanza[i] == terminator){
-                    okTerminator = 1;
-                    break;
-                }
-            }
-            if(okTerminator == 0){
-                printf("La stringa inserita eccede il massimo dei caratteri consentiti\n\n");
-                //printf("Inserire nome del direttorio, EOF per terminare: ");
-                continue;
-            }
 
             printf("inserisci il tipo della stanza che vuoi aggiungere (M)ulticast o (P)unto-a-punto: \n");
             tipo = getchar();
@@ -103,20 +92,6 @@ int main(int argc, char *argv[]) {
         else if ( strcmp(ok, "EU")==0){
             printf("inserisci il nome dell'utente che vuoi eliminare: \n");
             gets(utente);
-
-            //controllo che la stringa inserita non ecceda la grandezza designata
-            okTerminator = 0;
-            for(int i=0; i<MAX_STRING; i++){
-                if(utente[i] == terminator){
-                    okTerminator = 1;
-                    break;
-                }
-            }
-            if(okTerminator == 0){
-                printf("La stringa inserita eccede il massimo dei caratteri consentiti\n\n");
-                //printf("Inserire nome del direttorio, EOF per terminare: ");
-                continue;
-            }
 
             ris2=elimina_utente_1(&utente,clnt);
 
@@ -165,19 +140,6 @@ int main(int argc, char *argv[]) {
         else if (strcmp(ok, "ES")==0) {
             printf("inserisci il nome della stanza che vuoi eliminare: \n");
             gets(stanza);
-            //controllo che la stringa inserita non ecceda la grandezza designata
-            okTerminator = 0;
-            for(int i=0; i<MAX_STRING; i++){
-                if(stanza[i] == terminator){
-                    okTerminator = 1;
-                    break;
-                }
-            }
-            if(okTerminator == 0){
-                printf("La stringa inserita eccede il massimo dei caratteri consentiti\n\n");
-                //printf("Inserire nome del direttorio, EOF per terminare: ");
-                continue;
-            }
 
             ris1=elimina_stanza_1(&stanza,clnt);
 
@@ -195,19 +157,6 @@ int main(int argc, char *argv[]) {
         else if( strcmp(ok, "VU")==0 ){
             printf("inserisci il nome dell'utente che vuoi visualizzare: \n");
             gets(utente);
-            //controllo che la stringa inserita non ecceda la grandezza designata
-            okTerminator = 0;
-            for(int i=0; i<MAX_STRING; i++){
-                if(utente[i] == terminator){
-                    okTerminator = 1;
-                    break;
-                }
-            }
-            if(okTerminator == 0){
-                printf("La stringa inserita eccede il massimo dei caratteri consentiti\\n\\n");
-                //printf("Inserire nome del direttorio, EOF per terminare: ");
-                continue;
-            }
 
             ris2=visualizza_utente_1(&utente,clnt);
 

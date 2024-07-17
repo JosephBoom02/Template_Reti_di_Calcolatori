@@ -20,7 +20,7 @@ Client per richiedere l'invio di tutti i filedi un direttorio (multiple-get)
 #define MAX_DIR 4096
 
 int main(int argc, char *argv[]) {
-    int                sd, nread, nwrite, port, fineDirettorio, okTerminator;
+    int                sd, nread, nwrite, port, fineDirettorio;
     char               c, ok, file_name[LENGTH_FILE_NAME], dirName[MAX_DIR], path_file[MAX_DIR], carBuff;
     int file_size, file_name_size;
     struct stat statBuff;
