@@ -1,11 +1,8 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.rmi.RemoteException;
-import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class Functions {
@@ -99,7 +96,7 @@ public class Functions {
     }
 
     //contare il numero delle linee di tutti i file di un direttorio che contengono almeno uno specificato numero di occorrenze
-    public int conta_linee_occorrenze(String dir){
+    public int conta_linee_occorrenze(String dir) throws Exception{
         String carString;
         char car;
         int occ, res;
@@ -125,6 +122,7 @@ public class Functions {
                     try {
                         br = new BufferedReader(new InputStreamReader(new FileInputStream(files[i])));
 
+                        String line = null;
                         // esco dal ciclo alla lettura di un valore negativo -> EOF
                         while( (line = br.readLine()) != null){
                             nOcc = 0;
@@ -152,7 +150,7 @@ public class Functions {
     //restituisce la lista dei primi N (N<=6) nomi dei sottodirettori di primo livello trovati, se ci sono,
     //che contengono almeno 6 file di testo. In caso di direttorio inesistente, prevedere una segnalazione
     //di errore
-    @Override
+    //@Override
     public String[] lista_sottodirettori(String dir) throws RemoteException {
         String[] res = null;
         int dimRes = 0;
@@ -161,7 +159,7 @@ public class Functions {
         File dirCorr = new File(dir);
         if (dirCorr.exists()) {
 			File[] files = dirCorr.listFiles();
-			for (int i = 0; i < files.length; i++) {
+			for (int i = 0; i < files.length && dirNum <= 6; i++) {
                 System.out.println("Controllo " + files[i].getName());
 				if(files[i].isDirectory()){
                     System.out.println("File nel direttorio: ");
@@ -191,9 +189,6 @@ public class Functions {
                 }
 				
 			}
-
-            //Siccome utilizziamo dirNum per instanziare l'array di stringhe, nel caso incui sia maggiore di 6 cambiamo il suo valore
-            if(dirNum > 6) dirNum = 6;
 
             res = new String[dirNum];
             for (int i = 0; i < files.length && dimRes < 6; i++) {

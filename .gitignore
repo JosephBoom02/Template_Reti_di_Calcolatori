@@ -1,4 +1,4 @@
 **/*.class
 **/.project
-java/rmi/.project
 java/socket/datagram/.project
+java/rmi/.project
